@@ -44,3 +44,18 @@ ul.label {
 .dropdown:hover > .menu {
   display: flex;
 }
+
+.comments{
+    background-color: #FFFFFF;
+        border-left: 8px solid #708090 	;
+        color: #000000;
+        margin: 10px 0;
+
+}
+.CommentTitle{
+    color:black;
+    font-weight:bold;
+}
+
+
+

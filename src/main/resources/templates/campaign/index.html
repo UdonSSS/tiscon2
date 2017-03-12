@@ -25,7 +25,16 @@ xmlns:th="http://www.thymeleaf.org">
                 <div class="ui grid">
                     <div class="ten wide column">
                         <div class="statement" th:utext="${campaign.statement}" ></div>
+
+                        <br>
+                        <div class ="CommentTitle">コメント一覧</div>
+                        <div th:each="comment : ${comments}">
+                            <div class="comments" th:text="${comment.signatureComment}"></div>
+                        </div>
+
+
                     </div>
+
                     <div class="six wide column">
                         <h2>今すぐ賛同</h2>
                         <p>
