@@ -21,6 +21,8 @@ import net.unit8.sigcolle.model.User;
 import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 
+import java.util.List;
+
 import static enkan.util.HttpResponseUtils.RedirectStatusCode.SEE_OTHER;
 import static enkan.util.HttpResponseUtils.redirect;
 import static enkan.util.ThreadingUtils.some;
@@ -109,12 +111,15 @@ public class CampaignController {
         Campaign model = new Campaign();
         model.setStatement(processor.markdownToHtml(form.getStatement()));
         model.setCreateUserId(principal.getUserId());
+        model.setTitle(form.getTitle());
+        model.setGoal(Long.valueOf(form.getGoal()));
 
         CampaignDao campaignDao = domaProvider.getDao(CampaignDao.class);
         // TODO Databaseに登録する
+        campaignDao.insert(model);
 
         HttpResponse response = redirect("/campaign/" + model.getCampaignId(), SEE_OTHER);
-        response.setFlash(new Flash<>(""/* TODO: キャンペーンが新規作成できた旨のメッセージを生成する */));
+        response.setFlash(new Flash<>("正常に登録が完了しました"/* TODO: キャンペーンが新規作成できた旨のメッセージを生成する */));
 
         return response;
     }
@@ -138,15 +143,21 @@ public class CampaignController {
         UserDao userDao = domaProvider.getDao(UserDao.class);
         User user = userDao.selectByUserId(campaign.getCreateUserId());
 
+
         SignatureDao signatureDao = domaProvider.getDao(SignatureDao.class);
+        List<Signature> signature=signatureDao.selectAllByCampaignId(campaignId);
         int signatureCount = signatureDao.countByCampaignId(campaignId);
+
+
+
 
         return templateEngine.render("campaign/index",
                 "campaign", campaign,
                 "user", user,
                 "signatureCount", signatureCount,
                 "signature", form,
-                "message", message
+                "message", message,
+                "comments",signature
         );
     }
 }

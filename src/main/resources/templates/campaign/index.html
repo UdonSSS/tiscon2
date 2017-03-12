@@ -25,6 +25,14 @@ xmlns:th="http://www.thymeleaf.org">
                 <div class="ui grid">
                     <div class="ten wide column">
                         <div class="statement" th:utext="${campaign.statement}" ></div>
+
+                        <br>
+                        <label>コメント一覧</label>
+                        <div th:each="comment : ${comments}">
+                            <div class="comments" th:text="${comment.signatureComment}">
+                            </div>
+                        </div>
+
                     </div>
                     <div class="six wide column">
                         <h2>今すぐ賛同</h2>
@@ -34,10 +42,19 @@ xmlns:th="http://www.thymeleaf.org">
                         <div class="ui red progress">
                             <div class="bar" th:style="${'width:' + (signatureCount * 100 / campaign.goal) + '%'}"></div>
                         </div>
+
+                        <div th:if="${campaign.goal - signatureCount > 0}">
                         <p>
                             <span th:text="${campaign.goal}">1000</span>人まで残り
                             <span th:text="${campaign.goal - signatureCount}">1</span>人の賛同者が必要です！
                         </p>
+                        </div>
+
+                        <div th:if="${campaign.goal - signatureCount <= 0}">
+                            <p>
+                                目標人数に到達しました。
+                            </p>
+                        </div>
 
                         <form class="ui form" method="post" th:action="@{~/campaign/{id}(id=${campaign.campaignId})}" th:classappend="${signature.hasErrors()} ? 'error'">
                             <div class="field" th:classappend="${signature.hasErrors('name')} ? 'error'">
