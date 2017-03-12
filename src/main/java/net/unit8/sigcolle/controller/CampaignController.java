@@ -112,18 +112,11 @@ public class CampaignController {
         model.setStatement(processor.markdownToHtml(form.getStatement()));
         model.setCreateUserId(principal.getUserId());
 
-         //追加
-        model.setTitle(form.getTitle());
-        model.setGoal(Long.valueOf(form.getGoal()));
-
-
         CampaignDao campaignDao = domaProvider.getDao(CampaignDao.class);
-
-        campaignDao.insert(model);
         // TODO Databaseに登録する
 
         HttpResponse response = redirect("/campaign/" + model.getCampaignId(), SEE_OTHER);
-        response.setFlash(new Flash<>("キャンペーンが作成できました"/* TODO: キャンペーンが新規作成できた旨のメッセージを生成する */));
+        response.setFlash(new Flash<>(""/* TODO: キャンペーンが新規作成できた旨のメッセージを生成する */));
 
         return response;
     }
@@ -148,10 +141,6 @@ public class CampaignController {
         User user = userDao.selectByUserId(campaign.getCreateUserId());
 
         SignatureDao signatureDao = domaProvider.getDao(SignatureDao.class);
-        List<Signature> signature= signatureDao.selectAllByCampaignId(campaignId);
-
-
-
         int signatureCount = signatureDao.countByCampaignId(campaignId);
 
         return templateEngine.render("campaign/index",
@@ -159,8 +148,7 @@ public class CampaignController {
                 "user", user,
                 "signatureCount", signatureCount,
                 "signature", form,
-                "message", message,
-                "comments",signature
+                "message", message
         );
     }
 }
